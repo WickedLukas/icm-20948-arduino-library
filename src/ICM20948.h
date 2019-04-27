@@ -46,7 +46,7 @@ class ICM20948 {
     };
     enum AccelDlpfBandwidth
     {
-    	ACCEL_DLPF_BANDWIDTH_1209HZ,
+      ACCEL_DLPF_BANDWIDTH_1209HZ,
       ACCEL_DLPF_BANDWIDTH_246HZ,
       ACCEL_DLPF_BANDWIDTH_111HZ,
       ACCEL_DLPF_BANDWIDTH_50HZ,
@@ -57,7 +57,7 @@ class ICM20948 {
     };
     enum GyroDlpfBandwidth
     {
-    	GYRO_DLPF_BANDWIDTH_12106HZ,
+      GYRO_DLPF_BANDWIDTH_12106HZ,
       GYRO_DLPF_BANDWIDTH_197HZ,
       GYRO_DLPF_BANDWIDTH_152HZ,
       GYRO_DLPF_BANDWIDTH_120HZ,
@@ -84,10 +84,10 @@ class ICM20948 {
     };
     enum UserBank
     {
-    	USER_BANK_0,
-    	USER_BANK_1,
-    	USER_BANK_2,
-    	USER_BANK_3,
+      USER_BANK_0,
+      USER_BANK_1,
+      USER_BANK_2,
+      USER_BANK_3,
     };
   	ICM20948(TwoWire &bus, uint8_t address);
   	int begin();
@@ -109,6 +109,7 @@ class ICM20948 {
     float getMagY_uT();
     float getMagZ_uT();
     float getTemperature_C();
+	void getMotion9(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz, int16_t* hx, int16_t* hy, int16_t* hz);
   protected:
     // i2c
     uint8_t _address;
@@ -119,12 +120,7 @@ class ICM20948 {
     int _status;
     // buffer for reading from sensor
     uint8_t _buffer[21];
-    // data counts
-    int16_t _axcounts,_aycounts,_azcounts;
-    int16_t _gxcounts,_gycounts,_gzcounts;
-    int16_t _hxcounts,_hycounts,_hzcounts;
-    int16_t _tcounts;
-    // data buffer
+    // raw data
     float _ax, _ay, _az;
     float _gx, _gy, _gz;
     float _hx, _hy, _hz;
@@ -191,8 +187,8 @@ class ICM20948 {
     // ICM20948 registers
     // User bank 0
     const uint8_t UB0_WHO_AM_I = 0x00;
-		const uint8_t UB0_USER_CTRL = 0x03;
-		const uint8_t UB0_USER_CTRL_I2C_MST_EN = 0x20;
+    const uint8_t UB0_USER_CTRL = 0x03;
+    const uint8_t UB0_USER_CTRL_I2C_MST_EN = 0x20;
 
     const uint8_t UB0_PWR_MGMNT_1 = 0x06;
     const uint8_t UB0_PWR_MGMNT_1_CLOCK_SEL_AUTO = 0x01;
@@ -270,31 +266,31 @@ class ICM20948 {
     const uint8_t REG_BANK_SEL_USER_BANK_3 = 0x30;
 
     // Magnetometer constants
-		const uint8_t MAG_AK09916_I2C_ADDR = 0x0C;
-		const uint16_t MAG_AK09916_WHO_AM_I = 0x4809;
-		const uint8_t MAG_DATA_LENGTH = 8; // Bytes
+    const uint8_t MAG_AK09916_I2C_ADDR = 0x0C;
+    const uint16_t MAG_AK09916_WHO_AM_I = 0x4809;
+    const uint8_t MAG_DATA_LENGTH = 8; // Bytes
 
-		// Magnetometer (AK09916) registers
-		const uint8_t MAG_WHO_AM_I = 0x00;
+    // Magnetometer (AK09916) registers
+    const uint8_t MAG_WHO_AM_I = 0x00;
 
-		const uint8_t MAG_HXL = 0x11;
+    const uint8_t MAG_HXL = 0x11;
 
-		const uint8_t MAG_CNTL2 = 0x31;
-		const uint8_t MAG_CNTL2_POWER_DOWN = 0x00;
-		const uint8_t MAG_CNTL2_MODE_10HZ = 0x02;
-		const uint8_t MAG_CNTL2_MODE_50HZ = 0x06;
-		const uint8_t MAG_CNTL2_MODE_100HZ = 0x08;
+    const uint8_t MAG_CNTL2 = 0x31;
+    const uint8_t MAG_CNTL2_POWER_DOWN = 0x00;
+    const uint8_t MAG_CNTL2_MODE_10HZ = 0x02;
+    const uint8_t MAG_CNTL2_MODE_50HZ = 0x06;
+    const uint8_t MAG_CNTL2_MODE_100HZ = 0x08;
 
-		const uint8_t MAG_CNTL3 = 0x32;
-		const uint8_t MAG_CNTL3_RESET = 0x01;
+    const uint8_t MAG_CNTL3 = 0x32;
+    const uint8_t MAG_CNTL3_RESET = 0x01;
 
-		// private functions
-		int enableI2cMaster();
-		int selectAutoClockSource();
-		int enableAccelGyro();
-		int reset();
-		int changeUserBank(UserBank userBank);
-		int changeUserBank(UserBank userBank, bool force);
+    // private functions
+    int enableI2cMaster();
+    int selectAutoClockSource();
+    int enableAccelGyro();
+    int reset();
+    int changeUserBank(UserBank userBank);
+    int changeUserBank(UserBank userBank, bool force);
     int writeRegister(uint8_t subAddress, uint8_t data);
     int readRegisters(uint8_t subAddress, uint8_t count, uint8_t* dest);
     int writeMagRegister(uint8_t subAddress, uint8_t data);
